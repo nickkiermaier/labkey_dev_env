@@ -9,21 +9,27 @@ Vagrant.configure("2") do |config|
 		type:"nfs",
     	mount_options: %w{rw,async,fsc,nolock,vers=3,udp,rsize=32768,wsize=32768,hard,noatime,actimeo=2}
 
-    config.vm.synced_folder 'C:\Users\nick\.ssh', '/tmp/.ssh'
+    # mount .ssh folder for repo access
+    config.vm.synced_folder 'C:\Users\nick\.ssh',
+        '/root/.ssh',
+        owner: "root",
+        group: "root",
+        mount_options: ["dmode=700,fmode=600"]
 
+    # basic config for machine
 	config.vm.provider "virtualbox" do |v|
     	v.name = "Labkey Vagrant"
     	v.memory = 16384
   		v.cpus = 6
+
+  		# performance enhancements
   		v.default_nic_type = "Am79C970A"
   		v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
         v.customize ["modifyvm", :id, "--ioapic", "on"]
 	end
 
-	config.vm.provision "shell" do |s|
-    	s.path = "provision/build_labkey.sh"
-	end
-
+    # provision the instance
+	config.vm.provision "shell", path: "provision/build_labkey.sh"
 end
 

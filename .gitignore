@@ -1,2 +1,4 @@
 labkey
-*.log
+.idea
+.vagrant
+.log

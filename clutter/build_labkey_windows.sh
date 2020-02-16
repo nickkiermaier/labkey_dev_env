@@ -39,13 +39,6 @@ cd $LABKEY_ROOT/src
 wget  $JAVA_URL --progress=bar:force
 unzip $JAVA_ZIP_FILE -d "$LABKEY_ROOT/apps"
 
-
-sudo ln -s $LABKEY_ROOT/apps/$JAVA_VERSION /usr/local/java
-echo 'export JAVA_HOME="/usr/local/java"' >> /etc/profile
-echo 'export PATH=$PATH:/usr/local/java/bin' >> /etc/profile
-source /etc/profile
-
-
 # # tomcat
 # https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#tom
 TOMCAT_VERSION="apache-tomcat-9.0.29"
@@ -67,6 +60,7 @@ git clone https://github.com/LabKey/testAutomation.git &
 
 
 echo "cloning module repos"
+
 cd modules
 git clone https://github.com/LabKey/platform.git &
 git clone https://github.com/LabKey/commonAssays.git &
@@ -75,17 +69,43 @@ git clone https://github.com/labkey/discvrlabkeymodules DiscvrLabKeyModules &
 git clone https://github.com/labkey/ehrModules &
 git clone https://github.com/labkey/LabDevKitModules &
 
+
 cd ../optionalModules
 git clone git@github.com:LabKey/dataintegration.git &
 git clone git@github.com:LabKey/tnprc_ehr.git &
 wait
 
-
-# intellij
 cp $LABKEY_HOME/trunk/.idea/workspace.template.xml $LABKEY_HOME/trunk/.idea/workspace.xml
+
+
+
+# further windows setup
+cd $LABKEY_ROOT/additional_steps
+mkdir windows && cd windows
+touch windows_todo.md
+
+BASE_WIN_LOCATION="C:\Users\nick\Projects"
+LABKEY_WIN_ROOT="$BASE_WIN_LOCATION\labkey"
+CATALINA_WIN_HOME="$LABKEY_WIN_ROOT\apps\\$TOMCAT_VERSION"
+JAVA_WIN_HOME="$LABKEY_WIN_ROOT\apps\\$JAVA_VERSION"
+LABKEY_WIN_HOME="$LABKEY_WIN_ROOT\labkey\trunk"
+GRADLE_TOMCAT_LOCATION="C:/Users/nick/Projects/labkey/apps/$TOMCAT_VERSION"
+
 
 # gradle file
 cp $LABKEY_HOME/trunk/gradle/global_gradle.properties_template  ./gradle.properties
-sed -i "s|systemProp.tomcat.home=/path/to/tomcat/home|systemProp.tomcat.home=$LABKEY_ROOT/apps|g" ./gradle.properties
+sed -i "s|systemProp.tomcat.home=/path/to/tomcat/home|systemProp.tomcat.home=$GRADLE_TOMCAT_LOCATION|g" ./gradle.properties
 
 
+
+
+cat >> windows_todo.md <<EOL
+* put this entire compiled folder into $BASE_WIN_LOCATION
+* add this to your path: $LABKEY_WIN_HOME\build\deploy\bin
+* copy gradle.properties to ~/.gradle
+* add these environmental variables.
+	* JAVA_HOME: $JAVA_WIN_HOME
+	* CATALINA_HOME: $CATALINA_WIN_HOME
+	* LABKEY_HOME: $LABKEY_WIN_HOME 
+* Run $CATALINA_WIN_HOME\bin\startup.bat on windows or startup.sh on linux then visit localhost:8080.
+EOL
