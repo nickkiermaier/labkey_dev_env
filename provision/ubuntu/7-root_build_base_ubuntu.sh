@@ -1,6 +1,6 @@
 #!/bin/bash
 # idempotent script to build labkey application
-# set env vars
+# This sets up everything in the labkey folder
 # can be run as either root or user (depending on where ssh keys are located)
 
 LABKEY_ROOT=/labkey
@@ -8,7 +8,6 @@ LABKEY_REPO=$LABKEY_ROOT/labkey
 LABKEY_HOME=$LABKEY_REPO/trunk
 SQL_INSTALL_USER='labkey'
 SQL_INSTALL_USER_PASSWORD='Password01!'
-
 
 # labkey setup
 # ___________________________________________

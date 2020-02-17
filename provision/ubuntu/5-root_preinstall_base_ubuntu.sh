@@ -4,7 +4,6 @@
 
 LABKEY_ROOT=/labkey
 
-
 # remove labkey root if exists for idempotency
 rm -rf $LABKEY_ROOT
 
@@ -18,3 +17,5 @@ sudo mkdir -p $LABKEY_ROOT/src
 sudo mkdir -p $LABKEY_ROOT/tomcat-tmp
 chmod -R 777 $LABKEY_ROOT
 
+# copy ssh
+cp /labkey_ssh /root/.ssh
