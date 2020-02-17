@@ -1,10 +1,10 @@
 #!/bin/bash
-# idempotent script to build labkey application
-LABKEY_ROOT=/labkey
-
+# run as root
 apt update
 apt upgrade -y
-apt install git zip unzip wget curl dos2unix subversion curl python -y
+apt install -y git zip unzip wget curl dos2unix subversion curl python python3 dos2unix net-tools
+
+
 
 # output network speed
 cd /tmp
@@ -13,5 +13,4 @@ chmod +x speedtest-cli
 python speedtest-cli --simple > speedtest
 cat speedtest
 
-mkdir $LABKEY_ROOT
-chmod 777 $LABKEY_ROOT
+

@@ -1,5 +1,5 @@
 #!/bin/bash -e
-
+# run as root
 # Use the following variables to control your install:
 
 # Password for the SA user (required)
@@ -16,7 +16,6 @@ MSSQL_AGENT_ENABLED=true
 # Create an additional user with sysadmin privileges (optional)
 SQL_INSTALL_USER='labkey'
 SQL_INSTALL_USER_PASSWORD='Password01!'
-
 
 
 if [ -z $MSSQL_SA_PASSWORD ]
