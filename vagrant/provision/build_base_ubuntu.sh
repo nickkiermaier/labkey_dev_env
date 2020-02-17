@@ -1,21 +1,23 @@
 #!/bin/bash
 # idempotent script to build labkey application
 # after this is run these env vars need to be set
-apt update 
-apt install git zip unzip wget subversion curl python -y
-
-# output network speed
-cd /tmp 
-wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
-chmod +x speedtest-cli 
-python speedtest-cli --simple
 
 # set env vars
-LABKEY_ROOT=/vagrant/labkey
-LABKEY_HOME=/vagrant/labkey/labkey
+LABKEY_ROOT=/labkey
+LABKEY_REPO=$LABKEY_ROOT/labkey
+LABKEY_HOME=$LABKEY_REPO/trunk
 
-# remove labkey root if exists
+# remove labkey root if exists for idempotency
 rm -rf $LABKEY_ROOT
+
+# java env var
+JAVA_ZIP_FILE="openjdk-13.0.2_linux-x64_bin.tar.gz"
+JAVA_URL=https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz
+
+# tomcat env var
+TOMCAT_URL=http://apache.spinellicreations.com/tomcat/tomcat-9/v9.0.31/bin/apache-tomcat-9.0.31.tar.gz
+TOMCAT_ZIP_FILE="apache-tomcat-9.0.31.tar.gz"
+
 
 # build folder structure
 # https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#folder
@@ -32,39 +34,32 @@ sudo mkdir -p $LABKEY_ROOT/additional_steps
 # _______________________________________
 # java
 # https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#java
-JAVA_VERSION="jdk-13.0.1"
-JAVA_ZIP_FILE="openjdk-13.0.1_windows-x64_bin.zip"
-JAVA_URL=https://download.java.net/java/GA/jdk13.0.1/cec27d702aa74d5a8630c65ae61e4305/9/GPL/openjdk-13.0.1_windows-x64_bin.zip
 cd $LABKEY_ROOT/src
 wget  $JAVA_URL --progress=bar:force
-unzip $JAVA_ZIP_FILE -d "$LABKEY_ROOT/apps"
-
-
-sudo ln -s $LABKEY_ROOT/apps/$JAVA_VERSION /usr/local/java
-echo 'export JAVA_HOME="/usr/local/java"' >> /etc/profile
-echo 'export PATH=$PATH:/usr/local/java/bin' >> /etc/profile
-source /etc/profile
-
+tar -xvzf $JAVA_ZIP_FILE -C "$LABKEY_ROOT/apps"
 
 # # tomcat
 # https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#tom
-TOMCAT_VERSION="apache-tomcat-9.0.29"
-TOMCAT_URL=http://mirror.cc.columbia.edu/pub/software/apache/tomcat/tomcat-9/v9.0.29/bin/apache-tomcat-9.0.29-windows-x64.zip
-TOMCAT_ZIP_FILE="apache-tomcat-9.0.29-windows-x64.zip"
 cd $LABKEY_ROOT/src
 wget  $TOMCAT_URL --progress=bar:force
-unzip $TOMCAT_ZIP_FILE -d "$LABKEY_ROOT/apps"
+tar -xvzf $TOMCAT_ZIP_FILE -C "$LABKEY_ROOT/apps"
 
+
+# labkey setup
+# ___________________________________________
 # # # checkout main app
 # https://www.labkey.org/Documentation/wiki-page.view?name=devMachine#checkout
-cd $LABKEY_HOME
+cd $LABKEY_REPO
 svn checkout https://svn.mgt.labkey.host/stedi/trunk 
+
+# add github keygen(note only do on dev machines)
+ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts
 
 # # clone modules
 # https://www.labkey.org/Documentation/wiki-page.view?name=devMachine#coregit
 cd trunk/server
 git clone https://github.com/LabKey/testAutomation.git &
-
+sleep 1
 
 echo "cloning module repos"
 cd modules
@@ -75,17 +70,14 @@ git clone https://github.com/labkey/discvrlabkeymodules DiscvrLabKeyModules &
 git clone https://github.com/labkey/ehrModules &
 git clone https://github.com/labkey/LabDevKitModules &
 
+
 cd ../optionalModules
 git clone git@github.com:LabKey/dataintegration.git &
 git clone git@github.com:LabKey/tnprc_ehr.git &
 wait
 
+chmod -R 777 $LABKEY_ROOT
 
-# intellij
-cp $LABKEY_HOME/trunk/.idea/workspace.template.xml $LABKEY_HOME/trunk/.idea/workspace.xml
 
-# gradle file
-cp $LABKEY_HOME/trunk/gradle/global_gradle.properties_template  ./gradle.properties
-sed -i "s|systemProp.tomcat.home=/path/to/tomcat/home|systemProp.tomcat.home=$LABKEY_ROOT/apps|g" ./gradle.properties
 
 

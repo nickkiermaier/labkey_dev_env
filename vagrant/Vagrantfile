@@ -1,15 +1,15 @@
+# Install vagrant-disksize to allow resizing the vagrant box disk.
+unless Vagrant.has_plugin?("vagrant-disksize")
+    raise  Vagrant::Errors::VagrantError.new, "vagrant-disksize plugin is missing. Please install it using 'vagrant plugin install vagrant-disksize' and rerun 'vagrant up'"
+end
+
 Vagrant.configure("2") do |config|
 	config.vm.box = "ubuntu/bionic64"
 
 	# Required for NFS to work, pick any local IP
 	config.vm.network :private_network, ip: '192.168.50.50'
 
-	# Use NFS for shared folders for better performance
-	config.vm.synced_folder '.', '/vagrant',
-		type:"nfs",
-    	mount_options: %w{rw,async,fsc,nolock,vers=3,udp,rsize=32768,wsize=32768,hard,noatime,actimeo=2}
-
-    # mount .ssh folder for repo access
+    # mount .ssh folder for private repo access
     config.vm.synced_folder 'C:\Users\nick\.ssh',
         '/root/.ssh',
         owner: "root",
@@ -17,19 +17,25 @@ Vagrant.configure("2") do |config|
         mount_options: ["dmode=700,fmode=600"]
 
     # basic config for machine
+	config.disksize.size = '50GB'
 	config.vm.provider "virtualbox" do |v|
     	v.name = "Labkey Vagrant"
-    	v.memory = 16384
-  		v.cpus = 6
+    	v.memory = 10240
+  		v.cpus = 5
+
 
   		# performance enhancements
   		v.default_nic_type = "Am79C970A"
   		v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
         v.customize ["modifyvm", :id, "--ioapic", "on"]
+        v.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
 	end
 
     # provision the instance
-	config.vm.provision "shell", path: "provision/build_labkey.sh"
+    config.vm.provision "shell", path: "provision/build_env_ubuntu.sh"
+    config.vm.provision "shell", path: "provision/build_mssql_ubuntu.sh"
+	config.vm.provision "shell", path: "provision/build_base_ubuntu.sh"
+	config.vm.provision "shell", path: "provision/configure_ubuntu.sh"
 end
 
