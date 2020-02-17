@@ -6,13 +6,20 @@
         * RAM at least 10G
         * cpu cores as many as possible
         * cpu max around 80 or 85
-        
-2. Share these folders between the boxes
-    * share the folder you want labkey installed to /labkey on the VM
-    * share the location of your ssh keys(for github) to /labkey_ssh
-        * make this read only
-    *  ensure auto-mount is checked for both
+    * Enable Bidrectional pointer
+    * Install guest addons, if not already available (for full screen functionality, file share, and more)
+    
+2. Share these specific folders between the boxes
+    * create a shared folder pointing to host folder called: 
+        * labkey_vm_mount_point
+            * this is where your labkey files will go so they can be edited on the host
+        * .ssh  
+            * this is where your host ssh keys should be
+    * ensure no boxes are checked in the shared folder screen!!! 
+        * i.e. uncheck automount, permanant, readonly, etc.! 
+        * These get mounted automatically on login
+    
+    
 
-3. Install guest addons, if not already available (for full screen functionality and more)
 
 ### Internal VM Labkey Setup
