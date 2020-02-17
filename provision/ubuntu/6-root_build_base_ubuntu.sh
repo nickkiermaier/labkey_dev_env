@@ -9,6 +9,20 @@ LABKEY_HOME=$LABKEY_REPO/trunk
 SQL_INSTALL_USER='labkey'
 SQL_INSTALL_USER_PASSWORD='Password01!'
 
+kill -9 'jobs '
+
+# wipe/re-build folder structure
+# https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#folder
+echo "Wipe and Rebuild Labkey folder structure"
+rm -rf $LABKEY_ROOT/*
+mkdir -p $LABKEY_ROOT/apps \
+ $LABKEY_ROOT/backups \
+ $LABKEY_ROOT/labkey \
+ $LABKEY_ROOT/labkey/externalModules \
+ $LABKEY_ROOT/src \
+ $LABKEY_ROOT/tomcat-tmp
+chmod -R 777 $LABKEY_ROOT
+
 # labkey setup
 # ___________________________________________
 # # # checkout main app
