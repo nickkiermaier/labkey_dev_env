@@ -17,6 +17,8 @@ MSSQL_AGENT_ENABLED=true
 SQL_INSTALL_USER='labkey'
 SQL_INSTALL_USER_PASSWORD='Password01!'
 
+sudo apt-get update -y
+sudo apt-get install curl wget
 
 if [ -z $MSSQL_SA_PASSWORD ]
 then

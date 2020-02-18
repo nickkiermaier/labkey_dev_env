@@ -15,4 +15,8 @@ tar -xvzf $JAVA_ZIP_FILE -C "$APP_ROOT/apps"
 
 echo "create generic java symlink"
 sudo ln -s $APP_ROOT/apps/$JAVA_VERSION /usr/local/java
+
+
+# set permissions for the folder
 chmod 777 -R $APP_ROOT
+chown labkey -R $APP_ROOT

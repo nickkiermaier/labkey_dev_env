@@ -6,19 +6,56 @@
         * RAM at least 10G
         * cpu cores as many as possible
         * cpu max around 80 or 85
-    * Enable Bidrectional pointer
     * Install guest addons, if not already available (for full screen functionality, file share, and more)
     
 2. Share these specific folders between the boxes
-    * create a shared folder pointing to host folder called: 
-        * labkey_vm_mount_point
-            * this is where your labkey files will go so they can be edited on the host
-        * .ssh  
-            * this is where your host ssh keys should be
+    * .ssh  
+        * this is where your host ssh keys should be
     * ensure no boxes are checked in the shared folder screen!!! 
         * i.e. uncheck automount, permanant, readonly, etc.! 
-        * These get mounted automatically on login
-3. Add a second network adaptor
+        * These get mounted during install with specific permissions
+
+### Internal VM Labkey Setup
+1. Copy provisioning or mount the scripts
+    * there's a mount option in the first script
+    
+1. run all of the scripts.
+    * note: the user you should be using is in the name of the script.
+        * all root scripts need to be run as `sudo su`
+        * all user scripts should be run as labkey user
+
+2. install intellij via app store
+    * save it to task bar
+    * set all defaults
+    
+3. configure intellij according to this section
+    * using /labkey/labkey/trunk directory
+    * https://www.labkey.org/Documentation/wiki-page.view?name=devMachine#ijconfig
+    * note workspace template has already been copied in the scripts
+    
+4. Increase the Heap size in intellij
+    * Help | Edit Custom VM Options
+    * adjust the value of -Xmx to around 4024m
+    * save and restart IntelliJ IDEA
+    * https://stackoverflow.com/questions/17221725/how-to-increase-the-memory-heap-size-on-intellij-idea/17947603
+
+4. Configure the Appropriate .properties File has already been done by scripting! Skip to:
+
+5. In the root folder run:
+    * `./gradlew pickMSSQL`
+    * `./gradlew deployApp`
+
+
+## Optional but Recommended tweaks
+
+### tweak Vm settings
+1. Set sleep to never 
+1. Enable Bidrectional pointer
+1. enable two monitors
+
+
+### Share tomcat from guest to host
+1. Add a second network adaptor
     * https://odan.github.io/2017/10/29/accessing-your-virtualbox-guest-from-your-host-os.html
     * ```   Shut down all running VM’s
         Right click on the VM > Change… > Network
@@ -40,10 +77,3 @@
         Enter: ifconfig
         Now you should see a local IP addresse like: 192.168.56.104
         The IP address is dynamic an can be different on your VM```
-
-
-### Internal VM Labkey Setup
-1. run all of the scripts.
-    * note: the user you should be using is in the name of the script.
-        * all root scripts need to be run as `sudo su`
-        * all user scripts should be run as labkey user
