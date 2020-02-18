@@ -26,24 +26,29 @@
 
 2. install intellij via app store
     * save it to task bar
-    * set all defaults
+    * set all startup options to defaults
     
 3. configure intellij according to this section
-    * using /labkey/labkey/trunk directory
+    * open /labkey/labkey/trunk directory
     * https://www.labkey.org/Documentation/wiki-page.view?name=devMachine#ijconfig
     * note workspace template has already been copied in the scripts
-    
-4. Increase the Heap size in intellij
-    * Help | Edit Custom VM Options
-    * adjust the value of -Xmx to around 4024m
-    * save and restart IntelliJ IDEA
-    * https://stackoverflow.com/questions/17221725/how-to-increase-the-memory-heap-size-on-intellij-idea/17947603
+    * Increase the Heap size in intellij
+        * Help | Edit Custom VM Options
+        * adjust the value of -Xmx to around 4024m
+        * save and restart IntelliJ IDEA
+        * https://stackoverflow.com/questions/17221725/how-to-increase-the-memory-heap-size-on-intellij-idea/17947603
 
-4. Configure the Appropriate .properties File has already been done by scripting! Skip to:
+4. Configuring the Appropriate .properties File has already been done by scripting! Skip to:
 
 5. In the root folder run:
     * `./gradlew pickMSSQL`
     * `./gradlew deployApp`
+
+
+
+### labkey Console Setup
+
+
 
 
 ## Optional but Recommended tweaks
