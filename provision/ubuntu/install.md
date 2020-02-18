@@ -40,11 +40,33 @@
 
 4. Configuring the Appropriate .properties File has already been done by scripting! Skip to:
 
+5. Increase the inotify limit
+    * https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit
+
 5. In the root folder run:
     * `./gradlew pickMSSQL`
     * `./gradlew deployApp`
 
+6. add this to <tomcat home>/conf/Catalina/localhost/labkey.xml
+```
+ <Resource name="jdbc/tnprcDataSource" auth="Container"
+        type="javax.sql.DataSource"
+        username="labkey"
+        password="password"
+        driverClassName="net.sourceforge.jtds.jdbc.Driver"
+        url="jdbc:jtds:sqlserver://tsprlsqlc1d01.tulane.local:1433/prc"
+        maxAcive="20"
+        maxTotal="20"
+        maxIdle="10"
+        accessToUnderlyingConnectionAllowed="true"
+        validationQuery="SELECT 1"
+        />
+```
 
+### Setup Developer Machine Part 2
+
+* https://www.labkey.org/TNPRC/wiki-page.view?name=ehr_project_setup
+* also see this folder for a pdf copy
 
 ### labkey Console Setup
 
