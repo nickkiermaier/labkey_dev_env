@@ -25,3 +25,5 @@ source ~/.profile
 echo "config tomcat directory for gradle msssql build"
 mkdir -p $CATALINA_HOME/conf/Catalina/localhost
 
+chmod 777 -R $APP_ROOT
+chmod 777 -R $LABKEY_ROOT

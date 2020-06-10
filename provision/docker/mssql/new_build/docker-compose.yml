@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  mssql-server:
+    image: microsoft/mssql-server-linux:latest
+    container_name: mssql-server
+    volumes:
+      - labkey_volume:/var/opt/mssql/data
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=Labkey1098!
+    ports:
+      - "1433:1433"
+
+volumes:
+  labkey_volume:

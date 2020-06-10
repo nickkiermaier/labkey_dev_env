@@ -1,0 +1,536 @@
+#!/bin/bash
+
+# Copyright (c) 2017-2020 by Pulse Secure, LLC. All rights reserved
+
+INSTALLDIR=/usr/local/pulse 
+LOG=$INSTALLDIR/postinstall.log
+HOMEDIR=$(eval echo ~$SUDO_USER)
+# Redirect the stdout/stderr into postinstall log
+echo "Starting Post Install Script " > $LOG
+# no-same-owner is required to get root permission
+
+WEBKITGTK_1_SUPPORTED_OSTYPE_VERSION=( UBUNTU_14 UBUNTU_15 UBUNTU_16_17_18 UBUNTU_19 FEDORA CENTOS_6 DEBIAN_8_9 )
+WEBKITGTK_1_MINIMAL_SUPPORTED_OSTYPE_VERSION=( UBUNTU_14 CENTOS_6 UNSUPPORTED )
+WEBKITGTK_3_SUPPORTED_OSTYPE_VERSION=( CENTOS_7 RHEL_7 )
+
+PACKAGE_TYPE_RPM=1
+PACKAGE_TYPE_DEB=2
+SCRNAME=`basename $0`
+readMeEchoMsg="Please refer /usr/local/pulse/README for instructions to launch the Pulse Client"
+
+
+SUPPORTED_OSTYPES_LIST=( CENTOS_6 CENTOS_7 UBUNTU_14 UBUNTU_15 UBUNTU_16_17_18 UBUNTU_19 FEDORA FEDORA_27 FEDORA_30 RHEL_7 DEBIAN_8_9 DEBIAN_10 UNSUPPORTED)
+#RPM Based
+CENTOS_6_DEPENDENCIES=( glibc \
+                        nss-softokn-freebl \
+                        zlib \
+                        glib-networking \
+                        webkitgtk \
+                        xulrunner\
+                        libproxy \
+                        libXmu \
+                        libproxy-gnome \
+                        libproxy-mozjs)
+CENTOS_6_DEPENDENCIES_WITH_VERSION=( glibc \
+                                    nss  \
+                                    zlib \
+                                    glib-networking \
+                                    webkitgtk \
+                                    xulrunner \
+                                    libproxy \ 
+                                    libXmu \
+                                    libproxy-gnome \
+                                    libproxy-mozjs)
+CENTOS_7_DEPENDENCIES=( glibc \
+                    nss-softokn-freebl \
+                    zlib \
+                    glib-networking \
+                    webkitgtk3 \
+                    libproxy-gnome \
+                    libproxy-mozjs \
+                    libproxy )
+CENTOS_7_DEPENDENCIES_WITH_VERSION=( glibc \
+                                nss \
+                                zlib \
+                                glib-networking \
+                                webkitgtk3 \
+                                libproxy-gnome \
+                                libproxy-mozjs \
+                                libproxy )
+
+
+FEDORA_DEPENDENCIES=( glibc \
+                      nss-softokn-freebl \
+                      zlib \
+                      glib-networking \
+				      webkitgtk- \	
+                      xulrunner \
+                      libproxy \
+                      mozjs17 \
+                      libproxy-mozjs \
+					  libproxy-gnome)
+
+FEDORA_DEPENDENCIES_WITH_VERSION=(  glibc \
+                                    nss  \
+                                    zlib \
+                                    glib-networking \
+									webkitgtk \
+                                    xulrunner \
+                                    libproxy \
+                                    mozjs17 \
+                                    libproxy-mozjs \
+									libproxy-gnome)
+
+FEDORA_30_DEPENDENCIES=( glibc \
+                      nss-softokn-freebl \
+                      zlib \
+                      glib-networking \
+                      libproxy \
+                      libproxy-mozjs)
+FEDORA_30_DEPENDENCIES_WITH_VERSION=(  glibc \
+                                    nss  \
+                                    zlib \
+                                    glib-networking \
+                                    libproxy \
+                                    libproxy-mozjs)
+
+
+RHEL_7_DEPENDENCIES=( glibc \
+                    nss-softokn-freebl \
+                    zlib \
+                    glib-networking \
+                    webkitgtk3 \
+                    libproxy )
+RHEL_7_DEPENDENCIES_WITH_VERSION=( glibc \
+                                nss \
+                                zlib \
+                                glib-networking \
+                                webkitgtk3-2.4.9-5.el7 \
+                                libproxy )
+
+#Debian Based
+UBUNTU_14_DEPENDENCIES=( libc6 \
+                    libwebkitgtk-1 \
+                    libproxy1 \
+                    libproxy1-plugin-gsettings \
+                    libproxy1-plugin-webkit \
+                    libdconf1 \
+                    dconf-gsettings-backend)
+UBUNTU_14_DEPENDENCIES_WITH_VERSION=( libc6 \
+                                libwebkitgtk-1.0-0 \
+                                libproxy1 \
+                                libproxy1-plugin-gsettings \
+                                libproxy1-plugin-webkit \
+                                libdconf1 \
+                                dconf-gsettings-backend)
+
+UBUNTU_15_DEPENDENCIES=( libc6 \
+                    libwebkitgtk-1 \
+                    libproxy1 \
+                    libproxy1-plugin-gsettings \
+                    libproxy1-plugin-webkit \
+                    libdconf1 \
+                    dconf-gsettings-backend)
+UBUNTU_15_DEPENDENCIES_WITH_VERSION=( libc6 \
+                                libwebkitgtk-1.0-0 \
+                                libproxy1 \
+                                libproxy1-plugin-gsettings \
+                                libproxy1-plugin-webkit \
+                                libdconf1 \
+                                dconf-gsettings-backend)
+UBUNTU_16_17_18_DEPENDENCIES=( libc6 \
+                    webkitgtk \
+                    libproxy1 \
+                    libproxy1-plugin-gsettings \
+                    libproxy1-plugin-webkit \
+                    libdconf1 \
+                    dconf-gsettings-backend)
+UBUNTU_16_17_18_DEPENDENCIES_WITH_VERSION=( libc6 \
+                                libwebkitgtk-1.0-0 \
+                                libproxy1 \
+                                libproxy1-plugin-gsettings \
+                                libproxy1-plugin-webkit \
+                                libdconf1 \
+				dconf-gsettings-backend)
+UBUNTU_19_DEPENDENCIES=( libc6 \
+		    libgtk2.0-0 \
+			libproxy1 \
+			libproxy1-plugin-gsettings \
+       		libproxy1-plugin-webkit \
+       		libdconf1 \
+       		dconf-gsettings-backend)
+
+UBUNTU_19_DEPENDENCIES_WITH_VERSION=( libc6 \
+									libgtk2.0-0 \
+        							libproxy1 \
+               						libproxy1-plugin-gsettings \
+               						libproxy1-plugin-webkit \
+               						libdconf1 \
+									dconf-gsettings-backend)
+
+
+DEBIAN_8_9_DEPENDENCIES=( libc6 \
+                    webkitgtk-1 \
+                    libproxy1 \
+                    libproxy1-plugin-gsettings \
+                    libproxy1-plugin-webkit \
+                    libdconf1 \
+                    dconf-gsettings-backend)
+
+DEBIAN_8_9_DEPENDENCIES_WITH_VERSION=( libc6 \
+                                libwebkitgtk-1.0-0 \
+                                libproxy1 \
+                                libproxy1-plugin-gsettings \
+                                libproxy1-plugin-webkit \
+                                libdconf1 \
+                                dconf-gsettings-backend)
+DEBIAN_10_DEPENDENCIES=( libc6 \
+					libgtk2.0-0 \
+                    libproxy1 \
+                    libproxy1-plugin-gsettings \
+                    libproxy1-plugin-webkit \
+                    libdconf1 \
+                    dconf-gsettings-backend)
+
+DEBIAN_10_DEPENDENCIES_WITH_VERSION=( libc6 \
+								libgtk2.0-0 \
+                                libproxy1 \
+                                libproxy1-plugin-gsettings \
+                                libproxy1-plugin-webkit \
+                                libdconf1 \
+                                dconf-gsettings-backend)
+
+
+tam=${#SUPPORTED_OSTYPES_LIST[@]}
+for ((i=0; i < $tam; i++)); do
+    name=${SUPPORTED_OSTYPES_LIST[i]}
+    declare -r ${name}=$i
+done
+
+#determine the OS TYPE
+determine_os_type() {
+    if [ -f /etc/centos-release ]; then
+        OS_MAJOR_VERSION=$(cat /etc/centos-release | grep -o '.[0-9]'| head -1|sed -e 's/ //')
+        if [ $OS_MAJOR_VERSION = 6 ]; then
+            OS_TYPE=${SUPPORTED_OSTYPES_LIST[$CENTOS_6]} 
+        elif [ $OS_MAJOR_VERSION = 7 ]; then 
+            OS_TYPE=${SUPPORTED_OSTYPES_LIST[$CENTOS_7]} 
+        else
+            OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UNSUPPORTED]}
+        fi
+    elif [ -f /etc/fedora-release ]; then 
+   		release=$(cat /etc/fedora-release | cut  -d' ' -f3)
+   		if [ $release -eq "27" ]; then
+        	OS_TYPE=${SUPPORTED_OSTYPES_LIST[$FEDORA_27]}
+		elif [ $release -eq "30" ]; then
+			OS_TYPE=${SUPPORTED_OSTYPES_LIST[$FEDORA_30]}
+		else
+        	OS_TYPE=${SUPPORTED_OSTYPES_LIST[$FEDORA]}
+		fi
+    elif [ -f /etc/redhat-release ]; then
+        OS_MAJOR_VERSION=$(cat /etc/redhat-release | grep -o '.[0-9]'| head -1|sed -e 's/ //')
+        if [ $OS_MAJOR_VERSION = 7 ]; then
+            OS_TYPE=${SUPPORTED_OSTYPES_LIST[$RHEL_7]} 
+        else
+            OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UNSUPPORTED]}
+        fi
+    else 
+        OSNAME=$(lsb_release -d |grep -o "Ubuntu")
+        if [ "X$OSNAME" != "X" ]; then
+            UBUNTU_VER=$(lsb_release -d | grep -o '.[0-9]*\.'| head -1|sed -e 's/\s*//'|sed -e 's/\.//')
+            if [ $UBUNTU_VER = 14 ]; then
+                OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UBUNTU_14]}
+            elif [ $UBUNTU_VER = 15 ]; then
+                OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UBUNTU_15]}
+            elif [ $UBUNTU_VER = 16 ] || [ $UBUNTU_VER = 17 ] || [ $UBUNTU_VER = 18 ]; then
+                OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UBUNTU_16_17_18]}
+			elif [ $UBUNTU_VER = 19 ]; then 		
+                OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UBUNTU_19]}
+            else 
+                OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UNSUPPORTED]}	
+            fi
+        else
+            if [ -f /etc/debian_version ]; then
+                DEBIAN_MAJOR_VERSION=$(cat /etc/debian_version | grep -o '[0-9]'| head -1|sed -e 's/ //')
+	        	DEB_VER=$(lsb_release -sr)
+                if [ $DEBIAN_MAJOR_VERSION = 8 ]; then
+                    OS_TYPE=${SUPPORTED_OSTYPES_LIST[$DEBIAN_8_9]}
+                elif [ $DEBIAN_MAJOR_VERSION = 9 ]; then
+                    OS_TYPE=${SUPPORTED_OSTYPES_LIST[$DEBIAN_8_9]}
+                elif [ $DEB_VER = 10 ]; then
+                    OS_TYPE=${SUPPORTED_OSTYPES_LIST[$DEBIAN_10]}
+                else
+                    OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UNSUPPORTED]}
+                fi
+            else
+                OS_TYPE=${SUPPORTED_OSTYPES_LIST[$UNSUPPORTED]}
+            fi		
+        fi
+    fi
+}
+
+install_binaries() {
+    if [[ ${WEBKITGTK_3_SUPPORTED_OSTYPE_VERSION[@]} =~ ${OS_TYPE} ]] ; then
+        mv $INSTALLDIR/pulseUi_centos_7_x86_64 $INSTALLDIR/pulseUi
+        mv $INSTALLDIR/libpulseui.so_centos_7_x86_64 $INSTALLDIR/libpulseui.so
+    elif [[ ${WEBKITGTK_1_MINIMAL_SUPPORTED_OSTYPE_VERSION[@]} =~ ${OS_TYPE} ]] ; then
+        mv $INSTALLDIR/pulseUi_centos_6_x86_64 $INSTALLDIR/pulseUi
+        mv $INSTALLDIR/libpulseui.so_centos_6_x86_64 $INSTALLDIR/libpulseui.so
+    else
+        mv $INSTALLDIR/pulseUi_Ubuntu_16_x86_64 $INSTALLDIR/pulseUi
+        mv $INSTALLDIR/libpulseui.so_Ubuntu_16_x86_64 $INSTALLDIR/libpulseui.so
+    fi
+
+    #Remove other binaries which are not for this distribution.
+    rm $INSTALLDIR/pulseUi_* $INSTALLDIR/libpulseui.so_*
+
+	if [ $OS_TYPE != ${SUPPORTED_OSTYPES_LIST[$FEDORA_27]} ]; then
+		if [ -f /usr/local/pulse/libjavascriptcoregtk-1.0.so.0.16.19 ]; then
+			sudo rm /usr/local/pulse/libjavascriptcoregtk-1.0.so.0.16.19
+		fi
+
+		if [ -f /usr/local/pulse/libwebkitgtk-1.0.so.0.22.17 ]; then
+			sudo rm /usr/local/pulse/libwebkitgtk-1.0.so.0.22.17
+		fi
+	fi
+
+	if [[ ($OS_TYPE != ${SUPPORTED_OSTYPES_LIST[$UBUNTU_19]}) && ($OS_TYPE != ${SUPPORTED_OSTYPES_LIST[$DEBIAN_10]}) && ($OS_TYPE != ${SUPPORTED_OSTYPES_LIST[$FEDORA_30]}) ]]; then
+		if [ -f /usr/local/pulse/libwebkitgtk-1.0.so.0 ]; then
+			sudo rm /usr/local/pulse/libwebkitgtk-1.0.so.0
+		fi
+ 		if [ -f /usr/local/pulse/libjavascriptcoregtk-1.0.so.0 ]; then
+			sudo rm /usr/local/pulse/libjavascriptcoregtk-1.0.so.0
+		fi
+  		if [ -f /usr/local/pulse/libicui18n.so.60.2 ]; then
+			sudo rm /usr/local/pulse/libicui18n.so.60.2
+		fi
+
+		if [ -f /usr/local/pulse/libicuuc.so.60.2 ]; then
+			sudo rm /usr/local/pulse/libicuuc.so.60.2
+		fi
+
+		if [ -f /usr/local/pulse/libicudata.so.60.2 ]; then
+			sudo rm /usr/local/pulse/libicudata.so.60.2
+		fi
+		if [ -f /usr/local/pulse/libjpeg.so.8 ]; then
+			sudo rm /usr/local/pulse/libjpeg.so.8 
+		fi	
+ 		if [ /usr/local/pulse/libwebp.so.6 ]; then
+			sudo rm /usr/local/pulse/libwebp.so.6
+		fi
+
+	fi
+} 
+
+handle_common_installation() { 
+    tar --no-same-owner -xzf /usr/local/pulse/pulse.tgz -C /usr/local/pulse >/dev/null
+    chmod +rws /usr/local/pulse/pulsesvc
+    mv /usr/local/pulse/pulseUi.desktop /usr/share/applications
+
+    #Remove the 32 bit libsoup lib added as part of 32 bit previous installation.
+    if [ -f /usr/local/pulse/libsoup-2.4.so.1 ]; then
+        rm /usr/local/pulse/libsoup-2.4.so.1
+    fi
+
+    mkdir -p /usr/local/share/man/man1/
+    if [ -f /usr/local/pulse/pulse.1.gz ]; then
+    	mv /usr/local/pulse/pulse.1.gz /usr/local/share/man/man1/ 
+    fi
+
+}
+
+handle_uninstallation() {
+    if [ "X$SCRNAME" = "XConfigurePulse_x86_64.sh" ]; then 
+        PKG=$PACKAGE_TYPE_RPM
+    else
+        PKG=$PACKAGE_TYPE_DEB
+        UNINSTALL=`echo $SCRNAME | grep -i prerm`
+        if [ "X$UNINSTALL" != "X" ]; then 
+            PID_PULSEUI=$(pidof pulseUi)
+            PID_PULSESVC=$(pidof pulsesvc)
+            kill -s SIGKILL $PID_PULSEUI 2&>/dev/null
+            kill -s SIGKILL $PID_PULSESVC 2&>/dev/null
+            rm -rf /usr/local/pulse/* 
+            rmdir /usr/local/pulse
+            rm -f /usr/share/applications/pulseUi.desktop
+	    	rm -f /usr/local/share/man/man1/pulse.1.gz
+            if [ "${DEBIAN_FRONTEND}" = "noninteractive" ]
+            then
+                REPLY=n
+            else
+                read -p "Do you want to clean up the configuration? [Yy/Nn] " -n 1 -r
+                echo    # (optional) move to a new line
+            fi
+            if [[ $REPLY =~ ^[Yy]$ ]]
+            then
+                rm -f $HOMEDIR/.pulse_secure/pulse/.pulse_Connections.txt
+            fi
+            exit 
+        fi 
+        chown $USER: /usr/local/pulse/PulseClient_x86_64.sh
+        chown $USER: /usr/local/pulse/version.txt
+        chown $USER: /usr/local/pulse/pulse.tgz
+    fi
+}
+
+check_missing_dependencies() {
+    if [ $OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$UNSUPPORTED]} ]; then
+        return 
+    fi
+    isRpmBased=0
+    isDebBased=0
+    dependencyListName=${OS_TYPE}_DEPENDENCIES
+    dependencyListNameWithVersion=${OS_TYPE}_DEPENDENCIES_WITH_VERSION
+    if [[ ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$CENTOS_6]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$CENTOS_7]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$FEDORA]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$FEDORA_27]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$FEDORA_30]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$RHEL_7]}) ]]; then
+        isRpmBased=1
+    elif [[ ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$UBUNTU_14]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$UBUNTU_15]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$UBUNTU_16_17_18]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$UBUNTU_19]}) || \
+        ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$DEBIAN_8_9]}) || \
+	    ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$DEBIAN_10]})	]]; then
+        isDebBased=1
+    fi
+ 
+    if [ $isRpmBased = 1 ]; then
+        eval "depListArr=(\${${dependencyListName}[@]})"
+        eval "depListArrWithVersion=(\${${dependencyListNameWithVersion}[@]})"
+        tam=${#depListArr[@]}
+        PKGREQ=""
+        for ((i=0; i < $tam; i++)); do
+            depPkgName=${depListArr[i]}
+            curPkgVar=`rpm -qa | grep -i $depPkgName | grep -i "x86_64"`
+            if [ "X$curPkgVar" = "X" ]; then
+                echo "$depPkgName is missing in the machine" > $LOG
+                PKGREQ="$PKGREQ ${depListArrWithVersion[i]}"
+            fi 
+        done
+        if [ "X" != "X$PKGREQ" ]; then
+            # Install respective packages based on the current installation
+            echo ""
+            echo "Please execute below commands to install missing dependent packages "
+            for i in `echo $PKGREQ`
+            do
+                if [ $OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$FEDORA]} ]; then 
+                    echo "dnf install $i"
+                else 
+                    echo "yum install $i"
+                fi
+            done
+
+            echo ""
+            echo "OR" 
+            echo "You can install the missing dependency packages by running the below script "
+            echo "  /usr/local/pulse/PulseClient_x86_64.sh install_dependency_packages"
+            echo ""
+        fi
+		if [ $OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$FEDORA_27]} ]; then
+			if [[ -f /usr/local/pulse/libjavascriptcoregtk-1.0.so.0.16.19 && -f /usr/local/pulse/libwebkitgtk-1.0.so.0.22.17 ]]; then
+				if [[ ! -f /usr/local/pulse/libjavascriptcoregtk-1.0.so && ! -f /usr/local/pulse/libjavascriptcoregtk-1.0.so.0 ]]; then
+           			sudo ln -s /usr/local/pulse/libjavascriptcoregtk-1.0.so.0.16.19 /usr/local/pulse/libjavascriptcoregtk-1.0.so
+               		sudo ln -s /usr/local/pulse/libjavascriptcoregtk-1.0.so.0.16.19 /usr/local/pulse/libjavascriptcoregtk-1.0.so.0
+				fi
+
+				if [[ ! -f /usr/local/pulse/libwebkitgtk-1.0.so && ! -f /usr/local/pulse/libwebkitgtk-1.0.so.0 ]]; then
+                	sudo ln -s /usr/local/pulse/libwebkitgtk-1.0.so.0.22.17 /usr/local/pulse/libwebkitgtk-1.0.so
+                	sudo ln -s /usr/local/pulse/libwebkitgtk-1.0.so.0.22.17 /usr/local/pulse/libwebkitgtk-1.0.so.0
+				fi
+			fi
+
+		elif [ $OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$FEDORA_30]} ]; then
+			if [[ -f /usr/local/pulse/libwebkitgtk-1.0.so.0 && \
+ 				-f /usr/local/pulse/libjavascriptcoregtk-1.0.so.0  && \
+  				-f /usr/local/pulse/libicui18n.so.60.2 && \
+				-f /usr/local/pulse/libicuuc.so.60.2 &&  -f /usr/local/pulse/libicudata.so.60.2 && \
+				-f /usr/local/pulse/libjpeg.so.8 && -f /usr/local/pulse/libwebp.so.6 ]]; then
+				sudo ln -s /usr/local/pulse/libicui18n.so.60.2 /usr/local/pulse/libicui18n.so
+				sudo ln -s /usr/local/pulse/libicui18n.so.60.2 /usr/local/pulse/libicui18n.so.60	
+				sudo ln -s /usr/local/pulse/libicuuc.so.60.2 /usr/local/pulse/libicuuc.so
+				sudo ln -s /usr/local/pulse/libicuuc.so.60.2 /usr/local/pulse/libicuuc.so.60	
+				sudo ln -s /usr/local/pulse/libicudata.so.60.2 /usr/local/pulse/libicudata.so
+				sudo ln -s /usr/local/pulse/libicudata.so.60.2 /usr/local/pulse/libicudata.so.60
+			fi
+		fi
+        echo $readMeEchoMsg
+    elif [ $isDebBased = 1 ]; then
+        eval "depListArr=(\${${dependencyListName}[@]})"
+        eval "depListArrWithVersion=(\${${dependencyListNameWithVersion}[@]})"
+        tam=${#depListArr[@]}
+        PKGREQ=""
+        for ((i=0; i < $tam; i++)); do
+            depPkgName=${depListArr[i]}
+            curPkgVar=`dpkg-query -f '${binary:Package}\n' -W | grep -i $depPkgName | grep -i "amd64"`
+            if [ "X$curPkgVar" = "X" ]; then 
+                PKGREQ="$PKGREQ ${depListArrWithVersion[i]}"
+            fi
+        done
+        if [ "X$PKGREQ" != "X" ]; then
+            echo "Please execute below commands to install missing dependent packages manually"
+            for i in `echo $PKGREQ`
+            do 
+                echo "apt-get install $i"
+            done
+
+            echo ""
+            echo "OR" 
+            echo "You can install the missing dependency packages by running the below script "
+            echo "  /usr/local/pulse/PulseClient_x86_64.sh install_dependency_packages"
+            echo ""
+        fi 
+        echo $readMeEchoMsg
+        echo ""
+	### UBUNTU 19 and DEBIAN 10 changes
+
+        if [[ ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$UBUNTU_19]}) || ($OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$DEBIAN_10]}) ]]; then 
+			if [[ -f /usr/local/pulse/libwebkitgtk-1.0.so.0 && \
+ 				-f /usr/local/pulse/libjavascriptcoregtk-1.0.so.0  && \
+  				-f /usr/local/pulse/libicui18n.so.60.2 && \
+				-f /usr/local/pulse/libicuuc.so.60.2 &&  -f /usr/local/pulse/libicudata.so.60.2 && \
+				-f /usr/local/pulse/libjpeg.so.8 ]]; then
+				sudo ln -s /usr/local/pulse/libicui18n.so.60.2 /usr/local/pulse/libicui18n.so
+				sudo ln -s /usr/local/pulse/libicui18n.so.60.2 /usr/local/pulse/libicui18n.so.60	
+				sudo ln -s /usr/local/pulse/libicuuc.so.60.2 /usr/local/pulse/libicuuc.so
+				sudo ln -s /usr/local/pulse/libicuuc.so.60.2 /usr/local/pulse/libicuuc.so.60	
+				sudo ln -s /usr/local/pulse/libicudata.so.60.2 /usr/local/pulse/libicudata.so
+				sudo ln -s /usr/local/pulse/libicudata.so.60.2 /usr/local/pulse/libicudata.so.60	
+			fi
+   		fi
+
+ 		if [ $OS_TYPE = ${SUPPORTED_OSTYPES_LIST[$UBUNTU_19]} ]; then	
+			sudo rm /usr/local/pulse/libjpeg.so.8
+		fi
+	else
+		echo "Unsupported version $OS_TYPE"
+    fi
+}
+
+update_build_info()
+{
+    #We expect the version text in format example "Version: 5.3R3 comment"
+    BUILD_VERSION=`grep "Version: " ${INSTALLDIR}/version.txt | awk '{print $2}'`
+    #Fetch the last Number from the version text
+
+    #Fetch Build Number.
+    BUILD_NUMBER=`grep "Build Number: " ${INSTALLDIR}/version.txt | awk '{print $3}'`
+
+    if [ "X$BUILD_VERSION" != "X" ]; then
+        sed -ie "s/BUILD_VERSION/${BUILD_VERSION}/g" ${INSTALLDIR}/html/about.html
+    fi
+
+    if [ "X$BUILD_NUMBER" != "X" ]; then
+        sed -ie "s/BUILD_NUMBER/${BUILD_NUMBER}/g" ${INSTALLDIR}/html/about.html
+    fi
+}
+
+#Main
+determine_os_type
+handle_common_installation
+install_binaries
+handle_uninstallation
+check_missing_dependencies
+update_build_info

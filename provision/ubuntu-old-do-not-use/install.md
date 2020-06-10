@@ -1,7 +1,7 @@
 ### Setup Developer Machine Part 1
 1. run all of the scripts.
     * note: the user you should be using is in the name of the script.
-        * all root scripts need to be run as `sudo su`
+        * all scripts except the last one in config should be run as root
         * all user scripts should be run as labkey user
 
 2. install intellij via app store or however
