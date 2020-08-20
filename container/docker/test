@@ -1,1 +1,0 @@
-docker run -v .:/mount -v 'C:\Users\nick\.ssh':'/root/.ssh' -other -options image_name command_to_rungit clo
