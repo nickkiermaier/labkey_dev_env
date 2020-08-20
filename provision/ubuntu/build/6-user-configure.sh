@@ -7,13 +7,17 @@ LABKEY_REPO=$LABKEY_ROOT/labkey
 LABKEY_HOME=$LABKEY_REPO/trunk
 CATALINA_HOME=/usr/local/tomcat
 
-echo "bashrc profile"
-echo "export LABKEY_HOME=$LABKEY_HOME" >> ~/.bashrc
-echo 'export CATALINA_HOME="/usr/local/tomcat"' >> ~/.bashrc
-echo 'export JAVA_HOME="/usr/local/java"' >> ~/.bashrc
-echo 'export PATH=$PATH:$JAVA_HOME/bin' >> ~/.bashrc
-echo 'export PATH=$PATH:$LABKEY_HOME/build/deploy/bin' >> ~/.bashrc
-source ~/.bashrc
+
+# source /etc/profile in user account
+tmp=$(mktemp)
+file=~/.profile
+grep -v "source /etc/profile" "$file" > "$tmp" && mv "$tmp" "$file"
+echo "source /etc/profile"  >> $file
+
+file=~/.bashrc
+grep -v "source /etc/profile" "$file" > "$tmp" && mv "$tmp" "$file"
+echo "source /etc/profile"  >> $file
+
 
 echo "config user gradle ~/.gradle"
 rm -rf ~/.gradle && mkdir ~/.gradle
@@ -25,3 +29,8 @@ echo "org.gradle.jvmargs=-Xmx4g" >> ~/.gradle/gradle.properties
 # chown the labkey directory as the user
 WHOAMI=$(whoami)
 sudo chown -R $WHOAMI $LABKEY_ROOT
+
+# docker post installation
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker

@@ -1,18 +1,16 @@
 #!/bin/bash
 
-# run as root
+# run as root!
+
+
+# setup dependencies
 apt update
 apt upgrade -y
 apt install -y git zip unzip wget curl dos2unix subversion curl python python3 dos2unix net-tools docker.io docker-compose
 
 
-# docker post installation
-sudo groupadd docker
-sudo usermod -aG docker $USER
-newgrp docker
-
-
 # source /etc/profile
+tmp=$(mktemp)
 file=~/.profile
 grep -v "source /etc/profile" "$file" > "$tmp" && mv "$tmp" "$file"
 echo "source /etc/profile"  >> $file

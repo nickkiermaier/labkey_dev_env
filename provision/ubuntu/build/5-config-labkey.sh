@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 LABKEY_ROOT=/labkey
 LABKEY_REPO=$LABKEY_ROOT/labkey
 LABKEY_HOME=$LABKEY_REPO/trunk
