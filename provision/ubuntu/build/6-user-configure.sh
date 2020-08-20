@@ -5,8 +5,9 @@
 LABKEY_ROOT=/labkey
 LABKEY_REPO=$LABKEY_ROOT/labkey
 LABKEY_HOME=$LABKEY_REPO/trunk
-CATALINA_HOME=/usr/local/tomcat
-
+TOMCAT_VERSION="apache-tomcat-9.0.37"
+APP_ROOT=/labkey_apps
+TOMCAT_HOME=$APP_ROOT/apps/$TOMCAT_VERSION
 
 # source /etc/profile in user account
 tmp=$(mktemp)
@@ -22,7 +23,7 @@ echo "source /etc/profile"  >> $file
 echo "config user gradle ~/.gradle"
 rm -rf ~/.gradle && mkdir ~/.gradle
 cp $LABKEY_HOME/gradle/global_gradle.properties_template  ~/.gradle/gradle.properties
-sed -i "s|systemProp.tomcat.home=/path/to/tomcat/home|systemProp.tomcat.home=$CATALINA_HOME|g" ~/.gradle/gradle.properties
+sed -i "s|systemProp.tomcat.home=/path/to/tomcat/home|systemProp.tomcat.home=$TOMCAT_HOME|g" ~/.gradle/gradle.properties
 echo "org.gradle.parallel=true" >> ~/.gradle/gradle.properties
 echo "org.gradle.jvmargs=-Xmx4g" >> ~/.gradle/gradle.properties
 
