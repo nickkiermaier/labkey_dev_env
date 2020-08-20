@@ -57,5 +57,4 @@ git clone git@github.com:LabKey/dataintegration.git
 git clone git@github.com:LabKey/tnprc_ehr.git
 wait
 
-
 chmod 777 -R $LABKEY_ROOT
