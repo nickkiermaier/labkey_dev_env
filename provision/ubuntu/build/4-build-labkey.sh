@@ -1,4 +1,6 @@
 #!/bin/bash
+# run as user!
+
 read -s -p "Enter Password for sudo: " sudoPW
 
 LABKEY_ROOT=/labkey
@@ -89,6 +91,21 @@ if test -f "$file"; then
 fi
 echo $sudoPW | sudo -S mv $tmpfile $file
 
-# output env vars
-echo "Labkey Home path variable set to: $LABKEY_HOME"
-echo $PATH | grep labkey
+# setup user gradle file
+echo "config user gradle ~/.gradle"
+rm -rf ~/.gradle && mkdir ~/.gradle
+cp $LABKEY_HOME/gradle/global_gradle.properties_template  ~/.gradle/gradle.properties
+sed -i "s|systemProp.tomcat.home=/path/to/tomcat/home|systemProp.tomcat.home=$TOMCAT_HOME|g" ~/.gradle/gradle.properties
+echo "org.gradle.parallel=true" >> ~/.gradle/gradle.properties
+echo "org.gradle.jvmargs=-Xmx4g" >> ~/.gradle/gradle.properties
+
+#file=~/.bashrc
+#grep -v "source /etc/profile" "$file" > "$tmp" && mv "$tmp" "$file"
+#echo "source /etc/profile"  >> $file
+
+## source /etc/profile in user account
+#tmp=$(mktemp)
+#file=~/.profile
+#grep -v "source /etc/profile" "$file" > "$tmp" && mv "$tmp" "$file"
+#echo "source /etc/profile"  >> $file
+
