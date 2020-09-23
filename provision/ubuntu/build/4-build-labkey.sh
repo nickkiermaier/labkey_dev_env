@@ -7,6 +7,8 @@ LABKEY_REPO=$LABKEY_ROOT/labkey
 # For using trunk
 # LABKEY_HOME=$LABKEY_REPO/trunk
 # LABKEY_URL=https://svn.mgt.labkey.host/stedi/trunk
+# GIT_BRANCH=develop
+
 
 # For using branches
 LABKEY_BRANCH=release20.7-SNAPSHOT
@@ -67,12 +69,10 @@ do
 	cd ..
 done
 
-
 # config mssql file
 echo "config gradle mssql.properties"
 sed -i "s|jdbcUser=sa|jdbcUser=$SQL_USER|g" $LABKEY_HOME/server/configs/mssql.properties
 sed -i "s|jdbcPassword=sa|jdbcPassword=$SQL_PASSWORD|g" $LABKEY_HOME/server/configs/mssql.properties
-
 
 # copy workspace template
 echo "config intellij workspace template"
