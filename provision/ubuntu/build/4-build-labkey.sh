@@ -1,4 +1,5 @@
 #!/bin/bash
+read -s -p "Enter Password for sudo: " sudoPW
 
 LABKEY_ROOT=/labkey
 LABKEY_REPO=$LABKEY_ROOT/labkey
@@ -10,8 +11,14 @@ LABKEY_REPO=$LABKEY_ROOT/labkey
 # For using branches
 LABKEY_BRANCH=release20.7-SNAPSHOT
 GIT_BRANCH=$LABKEY_BRANCH
-# LABKEY_HOME=$LABKEY_REPO/$LABKEY_BRANCH
+LABKEY_HOME=$LABKEY_REPO/$LABKEY_BRANCH
 LABKEY_URL=https://svn.mgt.labkey.host/stedi/branches/$LABKEY_BRANCH/
+
+
+# for sql server config
+SQL_USER=sa
+SQL_PASSWORD=Labkey1098!
+
 
 # wipe/re-build folder structure
 echo "Wipe and Rebuild Labkey folder structure" # https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#folder
@@ -59,3 +66,29 @@ do
 	git checkout $GIT_BRANCH
 	cd ..
 done
+
+
+# config mssql file
+echo "config gradle mssql.properties"
+sed -i "s|jdbcUser=sa|jdbcUser=$SQL_USER|g" $LABKEY_HOME/server/configs/mssql.properties
+sed -i "s|jdbcPassword=sa|jdbcPassword=$SQL_PASSWORD|g" $LABKEY_HOME/server/configs/mssql.properties
+
+
+# copy workspace template
+echo "config intellij workspace template"
+cp $LABKEY_HOME/.idea/workspace.template.xml $LABKEY_HOME/.idea/workspace.xml
+
+# add Labkey environmental vars
+tmpfile=/tmp/labkey_config.sh
+echo "export LABKEY_HOME=$LABKEY_HOME" >> $tmpfile
+echo "export PATH=\$PATH:$LABKEY_HOME/build/deploy/bin" >> $tmpfile
+
+file=/etc/profile.d/labkey_config.sh
+if test -f "$file"; then
+    echo $sudoPW | sudo -S rm $file
+fi
+echo $sudoPW | sudo -S mv $tmpfile $file
+
+# output env vars
+echo "Labkey Home path variable set to: $LABKEY_HOME"
+echo $PATH | grep labkey
