@@ -18,3 +18,10 @@ echo "source /etc/profile"  >> $file
 file=~/.bashrc
 grep -v "source /etc/profile" "$file" > "$tmp" && mv "$tmp" "$file"
 echo "source /etc/profile"  >> $file
+
+
+# add github keygen to prevent first time connection issues(note only do on dev machines)
+ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts
+sleep 1
+
+
