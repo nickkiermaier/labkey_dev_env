@@ -16,7 +16,4 @@ sed -i "s|jdbcPassword=sa|jdbcPassword=$SQL_PASSWORD|g" $LABKEY_HOME/server/conf
 echo "config intellij workspace template"
 cp $LABKEY_HOME/.idea/workspace.template.xml $LABKEY_HOME/.idea/workspace.xml
 
-# Ensure access
-chmod 777 -R $APP_ROOT
-chmod 777 -R $LABKEY_ROOT
 

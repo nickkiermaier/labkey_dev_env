@@ -25,7 +25,7 @@ tar -xvzf $JAVA_ZIP_FILE -C "$APP_ROOT/apps"
 
 
 
-# setup environment
+# setup environmental variables
 file=/etc/profile.d/labkey_java_config.sh
 if test -f "$file"; then
     rm $file

@@ -28,7 +28,7 @@ chmod 777 -R $APP_ROOT
 mkdir -p $TOMCAT_HOME/conf/Catalina/localhost
 
 
-# setup environment
+# setup environmental variable
 file=/etc/profile.d/labkey_tomcat_config.sh
 if test -f "$file"; then
     rm $file
