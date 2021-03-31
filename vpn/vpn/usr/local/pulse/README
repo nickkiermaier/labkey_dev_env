@@ -1,0 +1,112 @@
+This README document explains the following:
+1) What are the pre-requisites to run the command line client?
+2) How to launch the command line client?
+3) How to launch the command line client with proxy?
+4) How to check the status of the VPN connection?
+5) How to terminate the command line client?
+6) How to upload the pulse service logs into PCS server?
+7) How to launch Pulse secure Linux UI:
+8) How to install the dependency packages to run the UI?
+9) How to install, remove and list Client Certificates
+
+1) What are the pre-requisites to run the command line client?
+-	PCS IP address or hostname
+- 	VPN user name and password
+- 	PCS sign-in URL
+-	Proxy details like IP address/hostname, proxy username and password (If the client proxy is used)
+- 	Realm
+
+2) How to launch the command line client?
+-	The command line client can be launched using the command below :
+	For 32 bit client: /usr/local/pulse/PulseClient.sh -h <PCS appliance IP/hostname> -u <vpn username> -p <vpn password> -U <PCS SIGNINURL>  -r <realm>
+													or
+	For 64 bit client: /usr/local/pulse/PulseClient_x86_64.sh -h <PCS appliance IP/hostname> -u <vpn username> -p <vpn password> -U <PCS SIGNINURL>  -r <realm>
+
+	eg:
+	/usr/local/pulse/PulseClient.sh -h 10.209.118.244 -u user1 -p PulseSecure -U https://10.209.118.244 -r mobileusers 
+
+Note:
+- 	The PulseClient.sh / PulseClient_x86_64.sh arguments are stored internally and these arguments will be reused later, if no arguments are provided. 
+	Arguments storage will be overwritten if new set of arguments are provided to the script.
+
+- 	Following command can be used to know the usage of the various options of the command line client.
+	For 32 bit client: /usr/local/pulse/PulseClient.sh -H
+	For 64 bit client: /usr/local/pulse/PulseClient_x86_64.sh -H
+
+- 	In case the user doesn't want the password to be revealed, he can choose not to provide the password as a command line parameter. A prompt will be prompted to 	read the password.
+
+-   The script will install the dependent packages (glibc, zlib, nss) if these packages are not already installed. 
+
+- "-f" option is deprecated. CA certificate store is used to verify the PCS certificate. 
+    In RHEL/CentOS/Fedora, "/etc/pki/tls/certs/ca-bundle.crt" is used as CA certificate store.
+    In Ubuntu, "/etc/ssl/certs/ca-certificates.crt" is used to as CA certificate store. 
+
+3) How to launch the command line client with proxy?
+-	The command line client with proxy can be launched using the command below :
+	For 32 bit client: /usr/local/pulse/PulseClient.sh -h <PCS appliance IP/hostname> -u <vpn username> -p <vpn password> -U <PCS SIGNINURL> -y <proxy IP/hostname> -z <proxy port> -s <proxy username> -a <proxy password> 
+														or	
+	For 64 bit client: /usr/local/pulse/PulseClient_x86_64.sh -h <PCS appliance IP/hostname> -u <vpn username> -p <vpn password> -U <PCS SIGNINURL> -y <proxy IP/hostname> -z <proxy port> -s <proxy username> -a <proxy password> 
+Note:
+- 	In case the user doesn't want to reveal the proxy password in the command line arguments, he can pass -I parameter instead of the proxy password parameter i.e -a.
+	Then a prompt will be given to take the proxy password.
+
+4) How to check the status of the VPN connection? 
+-	The status of the VPN connection can be seen by giving the following command.
+	For 32 bit client: /usr/local/pulse/PulseClient.sh -S
+							or
+	For 64 bit client: /usr/local/pulse/PulseClient_x86_64.sh -S
+Note: 
+-   This command could take upto 10s to reflect the current state of the Pulse client. 
+	
+5) How to terminate the command line client?
+- 	The command line client can be terminated using the following command.
+	For 32 bit client: /usr/local/pulse/PulseClient.sh -K
+							or
+	For 64 bit client: /usr/local/pulse/PulseClient_x86_64.sh -K
+
+6) How to upload the pulse service logs into PCS server?
+- The command line client can be launch to upload the logs with below command
+   For 32 bit client:  /usr/local/pulse/PulseClient.sh -h <PCS appliance IP/hostname> -u <vpn username> -p <vpn password> -g
+													or
+   For 64 bit client:  /usr/local/pulse/PulseClient_x86_64.sh -h <PCS appliance IP/hostname> -u <vpn username> -p <vpn password> -g
+
+Note: 
+- This command connects to PCS server and uploads the log into the server.
+
+7) How to launch Pulse secure Linux UI:
+    Launch UI from the applications:
+        1) The UI launcher is installed in the applications tab.
+        2) The user has to go to applications and search for the "pulse secure" UI and launch it by clicking the icon.
+    
+    Launch UI from the terminal:
+        1) Append /usr/local/pulse to LD_LIBRARY_PATH
+            example: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/pulse
+        
+        3) Launch the UI by executing the below command 
+            /usr/local/pulse/pulseUi
+
+8) How to install the dependency packages to run the UI?
+- The dependency packages for UI can be installed using the below command:
+   For 32 bit client:  /usr/local/pulse/PulseClient.sh install_dependency_packages
+				or
+   For 64 bit client:  /usr/local/pulse/PulseClient_x86_64.sh install_dependency_packages
+
+9) How to install, remove and list client certificates
+       Below are commands to install, delete and list the client certificates using PulseClient.sh
+       These commands are only needed if the client certificate authentication is enabled ie PCS
+       needs end user client certificate for authentication.
+
+       For 32 bit client: /usr/local/pulse/PulseClient.sh install_certificates 
+                                       [-inpfx < PFX file > ]
+                                       [-inpriv <private file> -inpub <public file>]
+       			 		  /usr/local/pulse/PulseClient.sh list_installed_certificates
+											or
+       For 64 bit client: /usr/local/pulse/PulseClient_x86_64.sh install_certificates 
+                                       [-inpfx < PFX file > ]
+                                       [-inpriv <private file> -inpub <public file>]
+       			 		  /usr/local/pulse/PulseClient_x86_64.sh list_installed_certificates
+
+       Please use the list command to get the certName for delete.
+       For 32 bit client: /usr/local/pulse/PulseClient.sh delete_certificates -certName <Certificate Name>
+														OR
+       For 64 bit client: /usr/local/pulse/PulseClient_x86_64.sh delete_certificates -certName <Certificate Name>

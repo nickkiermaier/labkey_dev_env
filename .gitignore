@@ -1,2 +1,6 @@
+clutter
+installers
 labkey
-*.log
+.idea
+.vagrant
+.log

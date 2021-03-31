@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "LABKEY HOME: $LABKEY_HOME"
+echo "JAVA HOME: $JAVA_HOME"
+echo "CATALINA HOME: $CATALINA_HOME"
+echo "PATH: $PATH"

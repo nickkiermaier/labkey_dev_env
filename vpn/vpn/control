@@ -1,0 +1,8 @@
+Package: pulse
+Version: 9.1R5-151
+Architecture: amd64
+Section: misc
+Priority: optional
+Maintainer: Pulse Secure <pulselinux@pulsesecure.net>
+Installed-Size: 2048
+Description: Pulse Secure Client for Linux
