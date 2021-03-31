@@ -4,9 +4,9 @@
 
 # set env vars
 APP_ROOT=/labkey_apps
-JAVA_ZIP_FILE="openjdk-13.0.2_linux-x64_bin.tar.gz"
-JAVA_URL=https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz
-JAVA_VERSION="jdk-13.0.2"
+JAVA_ZIP_FILE="openjdk-15.0.2_linux-x64_bin.tar.gz"
+JAVA_URL=https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db48ee2/7/GPL/openjdk-15.0.2_linux-x64_bin.tar.gz
+JAVA_VERSION="openjdk-15.0.2"
 JAVA_HOME=$APP_ROOT/apps/$JAVA_VERSION
 
 # make apps directories if not exist
