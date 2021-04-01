@@ -1,11 +1,7 @@
 #!/bin/bash
 # run as root !!!
 
-TOMCAT_URL=https://downloads.apache.org/tomcat/tomcat-9/v9.0.37/bin/apache-tomcat-9.0.37.tar.gz
-TOMCAT_ZIP_FILE="apache-tomcat-9.0.37.tar.gz"
-TOMCAT_VERSION="apache-tomcat-9.0.37"
-APP_ROOT=/labkey_apps
-TOMCAT_HOME=$APP_ROOT/apps/$TOMCAT_VERSION
+source ../shared-variables.sh
 
 # make apps directories if not exist
 mkdir $APP_ROOT $APP_ROOT/src $APP_ROOT/apps

@@ -1,4 +1,8 @@
 ### Setup Developer Machine Part 1
+* From here:
+* https://www.labkey.org/Documentation/wiki-page.view?name=devMachine#checkout
+* https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#folder
+* https://www.labkey.org/Documentation/wiki-page.view?name=devMachine#coregit
 
 
 ###  Pre-Build
