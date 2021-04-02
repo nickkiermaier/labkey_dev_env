@@ -3,7 +3,6 @@
 source ../shared-variables.sh
 
 
-
 # checkout main app
 echo "Checkout Main App"
 cd $LABKEY_HOME || exit
@@ -19,7 +18,6 @@ else
     echo "GIT PULL NOT SUCCESSFUL"
     exit
 fi
-
 
 
 # # clone testAutomation folder

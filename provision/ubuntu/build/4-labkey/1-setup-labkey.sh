@@ -1,7 +1,6 @@
 source ../shared-variables.sh
 
 
-
 echo "Wipe and Rebuild Labkey folder structure "
 
 read -s -p "Enter Password for sudo: " sudoPW
