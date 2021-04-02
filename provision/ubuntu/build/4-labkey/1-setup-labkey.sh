@@ -17,3 +17,5 @@ echo $sudoPW | sudo -S mkdir -p $LABKEY_ROOT/apps \
  $LABKEY_ROOT/tomcat-tmp
 
 echo $sudoPW | sudo -S chmod 777 -R $LABKEY_ROOT
+
+echo ""
