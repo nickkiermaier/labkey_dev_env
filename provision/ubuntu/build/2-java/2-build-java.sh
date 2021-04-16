@@ -8,7 +8,6 @@ source ../shared-variables.sh
 mkdir $APP_ROOT $APP_ROOT/src $APP_ROOT/apps
 chmod 777 -R $APP_ROOT
 
-
 echo "Removing old Java"
 rm -rf $JAVA_HOME
 
@@ -17,8 +16,6 @@ echo "Download/Extract Java"
 cd $APP_ROOT/src || exit
 wget  $JAVA_URL --progress=bar:force
 tar -xvzf $JAVA_ZIP_FILE -C "$APP_ROOT/apps"
-
-
 
 # setup environmental variables
 file=/etc/profile.d/labkey_java_config.sh
