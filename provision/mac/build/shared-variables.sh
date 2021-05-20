@@ -10,7 +10,7 @@ JAVA_VERSION="jdk-15.0.2"
 JAVA_HOME=$APP_ROOT/$JAVA_VERSION
 TOMCAT_VERSION="apache-tomcat-9.0.46"
 TOMCAT_HOME=$APP_ROOT/$TOMCAT_VERSION
-
+PATH=$PATH:$LABKEY_REPO/build/deploy/bin
 
 
 # Java
@@ -20,7 +20,6 @@ JAVA_URL=https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db
 # tomcat
 TOMCAT_URL=https://downloads.apache.org/tomcat/tomcat-9/v9.0.46/bin/apache-tomcat-9.0.46.tar.gz
 TOMCAT_ZIP_FILE="apache-tomcat-9.0.46.tar.gz"
-
 
 # git branches
 GIT_BRANCH=release21.3-SNAPSHOT
