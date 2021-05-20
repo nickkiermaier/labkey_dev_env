@@ -1,20 +1,21 @@
 # set env vars
 
 # locations
-APP_ROOT=~/labkey_apps
+
 LABKEY_ROOT=~/labkey
+APP_ROOT=$LABKEY_ROOT/apps
 LABKEY_HOME=$LABKEY_ROOT/labkey
 LABKEY_REPO=$LABKEY_HOME/server
 JAVA_VERSION="jdk-15.0.2"
-JAVA_HOME=$APP_ROOT/apps/$JAVA_VERSION
+JAVA_HOME=$APP_ROOT/$JAVA_VERSION
 TOMCAT_VERSION="apache-tomcat-9.0.46"
-TOMCAT_HOME=$APP_ROOT/apps/$TOMCAT_VERSION
+TOMCAT_HOME=$APP_ROOT/$TOMCAT_VERSION
+
+
 
 # Java
 JAVA_ZIP_FILE="openjdk-15.0.2_linux-x64_bin.tar.gz"
 JAVA_URL=https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db48ee2/7/GPL/openjdk-15.0.2_linux-x64_bin.tar.gz
-
-
 
 # tomcat
 TOMCAT_URL=https://downloads.apache.org/tomcat/tomcat-9/v9.0.46/bin/apache-tomcat-9.0.46.tar.gz

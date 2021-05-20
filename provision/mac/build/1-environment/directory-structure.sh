@@ -3,7 +3,9 @@
 source ../shared-variables.sh
 
 echo "Wipe and Rebuild Labkey folder structure" # https://www.labkey.org/Documentation/wiki-page.view?name=installComponents#folder
+
 rm -rf ${LABKEY_ROOT:?}/*
+
 mkdir -p $LABKEY_ROOT/apps \
  $LABKEY_ROOT/backups \
  $LABKEY_ROOT/labkey \
