@@ -1,37 +1,38 @@
 # set env vars
 
+# determine os type
+OS_TYPE="$(uname -s)" # Darwin for mac Linux for Linux
 
-
+echo "Using os_type: ${OS_TYPE}"
 
 # locations
 LABKEY_ROOT=~/labkey
-APP_ROOT=$LABKEY_ROOT/apps/apps
+APP_ROOT=$LABKEY_ROOT/apps
+APP_SRC_ROOT=$LABKEY_ROOT/apps/src
 LABKEY_HOME=$LABKEY_ROOT/labkey
 LABKEY_REPO=$LABKEY_HOME/server
-JAVA_VERSION="jdk-15.0.2+7"
-JAVA_HOME=$APP_ROOT/$JAVA_VERSION
-TOMCAT_VERSION="apache-tomcat-9.0.46"
-TOMCAT_HOME=$APP_ROOT/$TOMCAT_VERSION
-GIT_BRANCH=release21.7-SNAPSHOT
-
 
 # Java
-JAVA_ZIP_FILE="openjdk-15.0.2_linux-x64_bin.tar.gz"
-JAVA_URL=https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db48ee2/7/GPL/openjdk-15.0.2_linux-x64_bin.tar.gz
-
-
+JAVA_HOME=$APP_ROOT/java
+JAVA_VERSION="jdk-16.0.2.jdk"
+JAVA_ZIP_FILE="openjdk-16.0.2_osx-x64_bin.tar.gz"
+JAVA_URL=https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/$JAVA_ZIP_FILE
 
 # tomcat
-TOMCAT_URL=https://downloads.apache.org/tomcat/tomcat-9/v9.0.46/bin/apache-tomcat-9.0.46.tar.gz
-TOMCAT_ZIP_FILE="apache-tomcat-9.0.46.tar.gz"
+TOMCAT_HOME=$APP_ROOT/tomcat
+TOMCAT_ZIP_FILE="apache-tomcat-10.0.10.tar.gz"
+TOMCAT_URL=https://apache.osuosl.org/tomcat/tomcat-10/v10.0.10/bin/$TOMCAT_ZIP_FILE
+TOMCAT_VERSION="apache-tomcat-10.0.10"
 
 
-# git branches
+# git
+GIT_BRANCH=release21.7-SNAPSHOT
 LABKEY_SERVER_REPO_URL=git@github.com:LabKey/server.git
 LABKEY_REPO_MODULES_TO_INSTALL=( tnprc_ehr tnprc_billing platform ehrModules LabDevKitModules dataintegration commonAssays)
 
 # sql
 SQL_USER=sa
 SQL_PASSWORD=Labkey1098!
+
 
 
