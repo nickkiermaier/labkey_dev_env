@@ -17,7 +17,6 @@ sleep 1
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
 newgrp docker
-echo "Will need to logout/login for docker to add user to group successfully."
 
 ## source /etc/profile
 #tmp=$(mktemp)
