@@ -12,17 +12,23 @@ APP_SRC_ROOT=$LABKEY_ROOT/apps/src
 LABKEY_HOME=$LABKEY_ROOT/labkey
 LABKEY_REPO=$LABKEY_HOME/server
 
-# Java
-JAVA_HOME=$APP_ROOT/java
-JAVA_VERSION="jdk-16.0.2.jdk"
-JAVA_ZIP_FILE="openjdk-16.0.2_osx-x64_bin.tar.gz"
-JAVA_URL=https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/$JAVA_ZIP_FILE
 
-# tomcat
+#compatibility matrix
+# https://www.labkey.org/Documentation/wiki-page.view?name=supported
+
+# Java
+# https://jdk.java.net/archive/
+JAVA_HOME=$APP_ROOT/java
+JAVA_VERSION="jdk-15.0.2.jdk"
+JAVA_ZIP_FILE="openjdk-15.0.2_osx-x64_bin.tar.gz"
+JAVA_URL=https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db48ee2/7/GPL/$JAVA_ZIP_FILE
+
+# Tomcat
+# https://tomcat.apache.org/download-90.cgi
 TOMCAT_HOME=$APP_ROOT/tomcat
-TOMCAT_ZIP_FILE="apache-tomcat-10.0.10.tar.gz"
-TOMCAT_URL=https://apache.osuosl.org/tomcat/tomcat-10/v10.0.10/bin/$TOMCAT_ZIP_FILE
-TOMCAT_VERSION="apache-tomcat-10.0.10"
+TOMCAT_ZIP_FILE="apache-tomcat-9.0.52.tar.gz"
+TOMCAT_URL=https://downloads.apache.org/tomcat/tomcat-9/v9.0.52/bin/$TOMCAT_ZIP_FILE
+TOMCAT_VERSION="apache-tomcat-9.0.52"
 
 
 # git

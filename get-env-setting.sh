@@ -6,7 +6,7 @@ echo "ENSURE THIS IS ADDED TO YOUR ENVIRONMENT AND IS CORRECT:"
 echo "export JAVA_HOME=\"$JAVA_HOME\""
 echo "export CATALINA_HOME=\"$TOMCAT_HOME\""
 echo "export LABKEY_HOME=\"$LABKEY_REPO\""
-echo "export PATH=\$PATH:\$JAVA_HOME/bin:\$LABKEY_HOME/server/build/deploy/bin"
+echo "export PATH=\$JAVA_HOME/bin:\$LABKEY_HOME/server/build/deploy/bin:\$PATH"
 echo ""
 
 read -p "Continue? " choice
